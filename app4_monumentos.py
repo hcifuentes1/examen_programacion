@@ -8,95 +8,25 @@ import matplotlib.pyplot as plt
 # =========================================================
 
 st.set_page_config(
-    page_title="Observatorio Patrimonial de Chile",
-    page_icon="🏛️",
+    page_title="Monumentos Nacionales de Chile",
     layout="wide"
 )
 
 # =========================================================
-# IDENTIDAD VISUAL
+# PRESENTACIÓN DE LA APLICACIÓN
 # =========================================================
 
-CAFE = "#5B4636"
-ARENA = "#EDE3D4"
-VERDE = "#66745B"
-AZUL = "#3E5D73"
-GRIS = "#6B6B6B"
-FONDO = "#FAF7F2"
+st.title("Análisis de Monumentos Nacionales de Chile")
 
-st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background-color: {FONDO};
-    }}
-
-    .block-container {{
-        padding-top: 2rem;
-        padding-bottom: 3rem;
-        max-width: 1500px;
-    }}
-
-    h1 {{
-        color: {CAFE};
-        font-size: 2.8rem;
-        font-weight: 800;
-        margin-bottom: 0.2rem;
-    }}
-
-    h2, h3 {{
-        color: {CAFE};
-    }}
-
-    [data-testid="stSidebar"] {{
-        background-color: #F1E8DC;
-    }}
-
-    [data-testid="stMetric"] {{
-        background-color: white;
-        border-left: 5px solid {CAFE};
-        padding: 16px;
-        border-radius: 8px;
-        box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-    }}
-
-    .hero-box {{
-        background-color: {ARENA};
-        padding: 22px 26px;
-        border-radius: 14px;
-        margin-bottom: 20px;
-        border: 1px solid #DED0BC;
-    }}
-
-    .small-note {{
-        color: {GRIS};
-        font-size: 0.92rem;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# =========================================================
-# PORTADA / HERO
-# =========================================================
-
-st.markdown(
-    """
-    <div class="hero-box">
-        <h1> Observatorio Patrimonial de Chile</h1>
-        <p style="font-size:1.15rem; margin-bottom:0;">
-        Exploración territorial de los Monumentos Nacionales declarados por decreto,
-        a partir de datos públicos obtenidos mediante API REST.
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True
+st.write(
+    "Proyecto desarrollado para Taller de Programación II. "
+    "La aplicación utiliza datos públicos de datos.gob.cl obtenidos mediante una API REST "
+    "y permite revisar la distribución de Monumentos Nacionales por región y categoría."
 )
 
 st.caption(
-    "Base estadística actualizada al 10 de enero de 2013. "
-    "El análisis representa el recurso consultado y no un catastro actualizado al presente."
+    "Fuente: datos.gob.cl. Base estadística actualizada al 10 de enero de 2013. "
+    "Los resultados corresponden al recurso consultado y no representan un catastro actualizado al presente."
 )
 
 # =========================================================
@@ -188,16 +118,16 @@ totales_categoria = {
 # SIDEBAR
 # =========================================================
 
-st.sidebar.title("Exploración")
+st.sidebar.title("Opciones")
 
 vista = st.sidebar.radio(
-    "Selecciona una vista",
+    "Selecciona una sección",
     [
-        "Panorama nacional",
-        "Concentración territorial",
-        "Perfil regional",
+        "Resumen nacional",
+        "Distribución por región",
+        "Análisis por región",
         "Comparación por categoría",
-        "Comparador interactivo",
+        "Comparar regiones",
         "Datos"
     ]
 )
@@ -215,12 +145,12 @@ st.sidebar.write("**Regiones analizadas**")
 st.sidebar.write(len(tabla_regiones))
 
 # =========================================================
-# PANORAMA NACIONAL
+# RESUMEN NACIONAL
 # =========================================================
 
-if vista == "Panorama nacional":
+if vista == "Resumen nacional":
 
-    st.subheader("Panorama nacional")
+    st.subheader("Resumen nacional")
 
     c1, c2, c3, c4, c5 = st.columns(5)
 
@@ -294,17 +224,16 @@ if vista == "Panorama nacional":
         st.pyplot(fig2)
 
     st.info(
-        "Lectura rápida: el panel combina una visión territorial "
-        "con la composición nacional por tipo de Monumento Nacional."
+        "Los gráficos muestran la cantidad de monumentos por región y la distribución nacional por categoría."
     )
 
 # =========================================================
-# CONCENTRACIÓN TERRITORIAL
+# DISTRIBUCIÓN POR REGIÓN
 # =========================================================
 
-elif vista == "Concentración territorial":
+elif vista == "Distribución por región":
 
-    st.subheader("Concentración territorial")
+    st.subheader("Distribución por región")
 
     tabla_ordenada = tabla_regiones.sort_values(
         "TOTAL",
@@ -373,12 +302,12 @@ elif vista == "Concentración territorial":
     )
 
 # =========================================================
-# PERFIL REGIONAL
+# ANÁLISIS POR REGIÓN
 # =========================================================
 
-elif vista == "Perfil regional":
+elif vista == "Análisis por región":
 
-    st.subheader("Perfil regional")
+    st.subheader("Análisis por región")
 
     regiones = sorted(
         tabla_regiones["REGION"].tolist()
@@ -547,16 +476,15 @@ elif vista == "Comparación por categoría":
     st.pyplot(fig5)
 
 # =========================================================
-# COMPARADOR INTERACTIVO
+# COMPARAR REGIONES
 # =========================================================
 
-elif vista == "Comparador interactivo":
+elif vista == "Comparar regiones":
 
-    st.subheader("Comparador interactivo de regiones")
+    st.subheader("Comparar regiones")
 
     st.write(
-        "Selecciona las regiones y el indicador que quieres comparar. "
-        "El gráfico se actualiza automáticamente con cada cambio."
+        "En esta sección se pueden seleccionar distintas regiones y comparar sus resultados según el indicador elegido."
     )
 
     regiones_disponibles = tabla_regiones["REGION"].tolist()
@@ -688,8 +616,7 @@ elif vista == "Comparador interactivo":
         )
 
         st.caption(
-            "La comparación utiliza directamente los datos obtenidos "
-            "desde la API y cambia según las regiones y el indicador seleccionados."
+            "Los valores mostrados corresponden a los datos obtenidos desde la API para las regiones seleccionadas."
         )
 
 # =========================================================
@@ -749,8 +676,7 @@ elif vista == "Datos":
 st.divider()
 
 st.caption(
-    "Proyecto de análisis de datos con Python | "
-    "Fuente: datos.gob.cl | API REST CKAN"
+    "Proyecto final de Taller de Programación II | Fuente: datos.gob.cl"
 )
 
 st.markdown(
